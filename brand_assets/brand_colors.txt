@@ -1,0 +1,5 @@
+| Role    | Color         | Hex         |
+| ------- | ------------- | ----------- |
+| Primary | Midnight Navy | **#0B1F3A** |
+| Accent  | Data Blue     | **#3B82F6** |
+| Neutral | Cloud White   | **#F8FAFC** |
