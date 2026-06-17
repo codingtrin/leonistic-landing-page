@@ -151,6 +151,13 @@
     }
     .section-head p { margin-top: 16px; font-size: 1.1rem; color: var(--text); }
 
+    /* wide section illustration */
+    .section-illu {
+      display: block; width: 100%; height: auto; border-radius: 18px;
+      border: 1px solid var(--line); margin: -8px 0 46px;
+      box-shadow: 0 34px 70px -42px rgba(0,0,0,0.75);
+    }
+
     /* reveal on scroll */
     .reveal { opacity: 0; transform: translateY(26px); }
     .reveal.in { opacity: 1; transform: none; transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
@@ -159,24 +166,21 @@
     .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 22px; }
     .feature {
       position: relative; background: rgba(255,255,255,0.035);
-      border: 1px solid var(--line); border-radius: 16px; padding: 32px 28px;
+      border: 1px solid var(--line); border-radius: 16px; padding: 0;
       overflow: hidden; transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), background 0.35s var(--ease);
     }
     .feature::before {
-      content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 3px;
+      content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 3px; z-index: 2;
       background: linear-gradient(90deg, var(--blue), var(--blue-soft));
       transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--ease);
     }
     .feature:hover { transform: translateY(-6px); border-color: rgba(147,184,251,0.3); background: rgba(255,255,255,0.06); }
     .feature:hover::before { transform: scaleX(1); }
-    .feature .f-icon {
-      width: 50px; height: 50px; border-radius: 12px; margin-bottom: 20px;
-      background: rgba(59,130,246,0.14); color: var(--blue-soft);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .feature .f-icon svg { width: 25px; height: 25px; }
-    .feature h3 { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; color: var(--ice); margin-bottom: 9px; }
-    .feature p { font-size: 0.98rem; color: var(--text); }
+    .feature-media { aspect-ratio: 16 / 11; overflow: hidden; border-bottom: 1px solid var(--line); }
+    .feature-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
+    .feature:hover .feature-media img { transform: scale(1.05); }
+    .feature h3 { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; color: var(--ice); margin: 24px 26px 9px; }
+    .feature p { font-size: 0.98rem; color: var(--text); margin: 0 26px 30px; }
 
     /* ---------- Showreel + callouts ---------- */
     .showreel-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: start; }
@@ -208,7 +212,9 @@
     .cta-section { text-align: center; }
     .cta-section .inner {
       position: relative; overflow: hidden;
-      background: linear-gradient(160deg, rgba(59,130,246,0.16), rgba(59,130,246,0.04));
+      background:
+        linear-gradient(160deg, rgba(11,31,58,0.80), rgba(8,22,40,0.92)),
+        url("images/section-path.png") center / cover no-repeat;
       border: 1px solid rgba(147,184,251,0.24); border-radius: 24px;
       padding: clamp(48px, 7vw, 84px) 32px;
     }
@@ -261,6 +267,7 @@
       .fade, .reveal { opacity: 1 !important; transform: none !important; }
       .hero-bg-video { display: none; }
       .scroll-cue { display: none; }
+      .showcase-hero { background-image: url("images/hero-bg.png"); background-size: cover; background-position: center; }
     }
   </style>
 </head>
@@ -284,7 +291,7 @@
 
   <!-- Video hero -->
   <header class="showcase-hero">
-    <video class="hero-bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
+    <video class="hero-bg-video" autoplay muted loop playsinline preload="auto" poster="images/hero-bg.png" aria-hidden="true" tabindex="-1">
       <source src="convertedvid.mp4" type="video/mp4" />
     </video>
     <div class="hero-overlay"></div>
@@ -313,31 +320,37 @@
           <h2>Clarity, end to end</h2>
           <p>Every project runs through the same three disciplines — built, measured, and explained until it's genuinely clear.</p>
         </div>
+        <img class="section-illu reveal" src="images/section-pillars.png" loading="lazy" decoding="async"
+             alt="Three glowing electric-blue icons — a code symbol, a bar chart, and a message bubble — converging into a single point of light." />
         <div class="feature-grid">
           <div class="feature reveal">
-            <div class="f-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <div class="feature-media">
+              <img src="images/feature-build.png" loading="lazy" decoding="async"
+                   alt="Glowing electric-blue code brackets and modular blocks assembling into a clean structure." />
             </div>
             <h3>Software that ships</h3>
             <p>Practical, maintainable code built to solve real problems — not to impress a demo.</p>
           </div>
           <div class="feature reveal">
-            <div class="f-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <div class="feature-media">
+              <img src="images/feature-analyze.png" loading="lazy" decoding="async"
+                   alt="A glowing 3D bar chart with a rising data line made of light on a deep navy background." />
             </div>
             <h3>Data that speaks</h3>
             <p>Analysis that turns raw numbers into decisions you can actually act on.</p>
           </div>
           <div class="feature reveal">
-            <div class="f-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <div class="feature-media">
+              <img src="images/feature-explain.png" loading="lazy" decoding="async"
+                   alt="A glowing message bubble with a beam of light cutting through layered translucent panels." />
             </div>
             <h3>Ideas made clear</h3>
             <p>Technical content that makes complex technology approachable for anyone.</p>
           </div>
           <div class="feature reveal">
-            <div class="f-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <div class="feature-media">
+              <img src="images/feature-thread.png" loading="lazy" decoding="async"
+                   alt="A single luminous thread of light weaving through a row of connected glowing nodes." />
             </div>
             <h3>One clear thread</h3>
             <p>From first commit to final explanation, it stays one cohesive story.</p>
@@ -357,7 +370,7 @@
         <div class="showreel-grid">
           <div class="player reveal">
             <!-- The watchable cut (with sound + controls). Same asset as the ambient hero. -->
-            <video id="reel" controls playsinline preload="metadata">
+            <video id="reel" controls playsinline preload="metadata" poster="images/feature-product.png">
               <source src="convertedvid.mp4" type="video/mp4" />
               Your browser doesn't support embedded video.
             </video>
