@@ -5,7 +5,7 @@ A landing page for Leonistic — building software, analyzing data, and explaini
 ## Always
 
 - Use the frontend-design skill before writing any front-end code.
-- Reference `brand_assets/` for the logo, colors, and brand info. The brand colors are in `brand_assets/brand_colors.txt` and the tagline is in `brand_assets/brand.md`.
+- Reference `brand_assets/` for the logo, colors, and brand info. The full brand identity (colors, typography, UI elements, voice) is in `brand_assets/brandidentity.png`; the tagline and audience are in `brand_assets/brand.md`.
 
 ## Stack
 
