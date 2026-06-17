@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Showcase — Leonistic</title>
+  <meta name="description" content="A showcase of Leonistic's work — building software, analyzing data, and explaining technology, one clear solution at a time." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --navy:    #0B1F3A;
+      --navy-2:  #0a1b32;
+      --navy-3:  #081628;
+      --blue:    #3B82F6;
+      --blue-soft: #93b8fb;
+      --ice:     #F8FAFC;
+      --steel:   #64748B;
+      --text:    #c6d4e8;
+      --line:    rgba(147,184,251,0.14);
+
+      --serif: "Playfair Display", Georgia, serif;
+      --sans:  "Inter", system-ui, sans-serif;
+      --mono:  "JetBrains Mono", ui-monospace, monospace;
+
+      --maxw: 1140px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--navy);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    img, video, svg { display: block; }
+
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
+    .kicker {
+      font-family: var(--mono); font-size: 0.72rem;
+      letter-spacing: 0.32em; text-transform: uppercase; color: var(--blue-soft);
+    }
+
+    /* ---------- Nav ---------- */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11,31,58,0.72);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      max-width: var(--maxw); margin: 0 auto; padding: 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand img { width: 36px; height: 36px; object-fit: contain; background: var(--ice); border-radius: 9px; padding: 5px; }
+    .brand .name { font-family: var(--serif); font-weight: 700; font-size: 1.3rem; color: var(--ice); letter-spacing: -0.01em; }
+    .nav-links { display: flex; gap: 30px; align-items: center; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--text); text-decoration: none; transition: color 0.2s var(--ease); }
+    .nav-links a:hover, .nav-links a.active { color: var(--ice); }
+    .nav-links .cta {
+      display: inline-flex; align-items: center; min-height: 44px;
+      color: var(--ice); border: 1px solid rgba(255,255,255,0.25);
+      padding: 9px 18px; border-radius: 999px;
+      transition: all 0.25s var(--ease);
+    }
+    .nav-links .cta:hover { background: var(--ice); color: var(--navy); border-color: var(--ice); }
+    @media (max-width: 720px) { .nav-links a:not(.cta) { display: none; } }
+
+    /* ---------- Video hero ---------- */
+    .showcase-hero {
+      position: relative; min-height: 92vh;
+      display: flex; align-items: center; overflow: hidden;
+      background: var(--navy); color: var(--ice);
+    }
+    .hero-bg-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(11,31,58,0.40) 0%, rgba(11,31,58,0.72) 60%, rgba(11,31,58,0.96) 100%),
+        linear-gradient(90deg, rgba(11,31,58,0.75) 0%, rgba(11,31,58,0.15) 65%);
+    }
+    .hero-content {
+      position: relative; z-index: 2; width: 100%;
+      max-width: var(--maxw); margin: 0 auto; padding: 0 32px;
+      text-shadow: 0 2px 28px rgba(0,0,0,0.45);
+    }
+    .hero-content .eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; }
+    .hero-content .eyebrow .dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--blue);
+      box-shadow: 0 0 0 0 rgba(59,130,246,0.6); animation: pulse 2.4s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.5); }
+      70% { box-shadow: 0 0 0 11px rgba(59,130,246,0); }
+      100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+    }
+    .hero-content h1 {
+      font-family: var(--serif); font-weight: 700;
+      font-size: clamp(2.5rem, 6.4vw, 5.2rem); line-height: 1.04;
+      letter-spacing: -0.018em; color: var(--ice); margin-bottom: 24px; max-width: 16ch;
+    }
+    .hero-content h1 em { font-style: italic; color: var(--blue-soft); font-weight: 500; }
+    .hero-content .lead { font-size: clamp(1.08rem, 2.2vw, 1.32rem); color: #dbe6f6; max-width: 50ch; margin-bottom: 38px; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      min-height: 50px; padding: 15px 30px; border-radius: 999px;
+      font-family: var(--sans); font-weight: 600; font-size: 0.95rem;
+      text-decoration: none; cursor: pointer; border: 1px solid transparent;
+      transition: transform 0.25s var(--ease), background 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+    }
+    .btn svg { width: 18px; height: 18px; }
+    .btn-primary { background: var(--blue); color: #fff; box-shadow: 0 12px 32px -12px rgba(59,130,246,0.8); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -14px rgba(59,130,246,0.9); }
+    .btn-ghost { color: var(--ice); border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.06); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    .btn-ghost:hover { transform: translateY(-2px); border-color: var(--ice); background: rgba(255,255,255,0.14); }
+
+    .scroll-cue {
+      position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
+      z-index: 2; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--blue-soft); display: flex; flex-direction: column;
+      align-items: center; gap: 8px; opacity: 0.85;
+    }
+    .scroll-cue span { width: 1px; height: 34px; background: linear-gradient(var(--blue-soft), transparent); animation: cue 1.8s var(--ease) infinite; }
+    @keyframes cue { 0%,100% { opacity: 0.3; transform: scaleY(0.7); } 50% { opacity: 1; transform: scaleY(1); } }
+
+    /* fade-in */
+    .fade { opacity: 0; transform: translateY(22px); animation: rise 0.9s var(--ease) forwards; }
+    .fade.d1 { animation-delay: 0.1s; } .fade.d2 { animation-delay: 0.24s; }
+    .fade.d3 { animation-delay: 0.38s; } .fade.d4 { animation-delay: 0.52s; }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+
+    /* ---------- Sections ---------- */
+    .section { position: relative; padding: clamp(72px, 10vw, 128px) 0; }
+    .section-alt { background: var(--navy-3); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .section-head { max-width: 60ch; margin-bottom: 56px; }
+    .section-head .kicker { display: block; margin-bottom: 16px; }
+    .section-head h2 {
+      font-family: var(--serif); font-weight: 700; color: var(--ice);
+      font-size: clamp(1.9rem, 4vw, 2.9rem); line-height: 1.1; letter-spacing: -0.015em;
+    }
+    .section-head p { margin-top: 16px; font-size: 1.1rem; color: var(--text); }
+
+    /* reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(26px); }
+    .reveal.in { opacity: 1; transform: none; transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+
+    /* ---------- Features ---------- */
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 22px; }
+    .feature {
+      position: relative; background: rgba(255,255,255,0.035);
+      border: 1px solid var(--line); border-radius: 16px; padding: 32px 28px;
+      overflow: hidden; transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), background 0.35s var(--ease);
+    }
+    .feature::before {
+      content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--blue-soft));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--ease);
+    }
+    .feature:hover { transform: translateY(-6px); border-color: rgba(147,184,251,0.3); background: rgba(255,255,255,0.06); }
+    .feature:hover::before { transform: scaleX(1); }
+    .feature .f-icon {
+      width: 50px; height: 50px; border-radius: 12px; margin-bottom: 20px;
+      background: rgba(59,130,246,0.14); color: var(--blue-soft);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feature .f-icon svg { width: 25px; height: 25px; }
+    .feature h3 { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; color: var(--ice); margin-bottom: 9px; }
+    .feature p { font-size: 0.98rem; color: var(--text); }
+
+    /* ---------- Showreel + callouts ---------- */
+    .showreel-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: start; }
+    @media (max-width: 900px) { .showreel-grid { grid-template-columns: 1fr; gap: 32px; } }
+    .player {
+      position: relative; border-radius: 18px; overflow: hidden;
+      border: 1px solid var(--line); background: #000;
+      box-shadow: 0 40px 80px -40px rgba(0,0,0,0.8);
+    }
+    .player video { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+
+    .callouts { display: flex; flex-direction: column; gap: 12px; }
+    .callouts .c-title { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--steel); margin-bottom: 6px; }
+    .callout {
+      display: flex; gap: 16px; align-items: flex-start; width: 100%; text-align: left;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 12px;
+      padding: 16px 18px; color: var(--text); cursor: pointer; font: inherit;
+      transition: transform 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease);
+    }
+    .callout:hover { transform: translateX(4px); border-color: rgba(147,184,251,0.34); background: rgba(255,255,255,0.06); }
+    .callout .time {
+      font-family: var(--mono); font-size: 0.82rem; color: var(--blue-soft);
+      background: rgba(59,130,246,0.12); border-radius: 7px; padding: 4px 9px; flex: none; margin-top: 1px;
+    }
+    .callout .c-body h4 { font-size: 1rem; color: var(--ice); font-weight: 600; margin-bottom: 3px; }
+    .callout .c-body p { font-size: 0.9rem; color: var(--text); line-height: 1.5; }
+
+    /* ---------- CTA ---------- */
+    .cta-section { text-align: center; }
+    .cta-section .inner {
+      position: relative; overflow: hidden;
+      background: linear-gradient(160deg, rgba(59,130,246,0.16), rgba(59,130,246,0.04));
+      border: 1px solid rgba(147,184,251,0.24); border-radius: 24px;
+      padding: clamp(48px, 7vw, 84px) 32px;
+    }
+    .cta-section .inner::after {
+      content: ""; position: absolute; width: 420px; height: 420px; right: -120px; top: -160px;
+      background: radial-gradient(circle, rgba(59,130,246,0.3), transparent 62%); pointer-events: none;
+    }
+    .cta-section h2 {
+      position: relative; font-family: var(--serif); font-weight: 700; color: var(--ice);
+      font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.015em; margin-bottom: 16px;
+    }
+    .cta-section h2 em { font-style: italic; color: var(--blue-soft); font-weight: 500; }
+    .cta-section p { position: relative; max-width: 48ch; margin: 0 auto 34px; font-size: 1.12rem; }
+    .cta-section .btn { position: relative; }
+
+    /* ---------- Footer ---------- */
+    footer { background: var(--navy-3); border-top: 1px solid var(--line); padding: 80px 0 40px; }
+    .ft-top { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 48px; align-items: start; padding-bottom: 48px; border-bottom: 1px solid var(--line); }
+    @media (max-width: 720px) { .ft-top { grid-template-columns: 1fr; gap: 32px; } }
+    .ft-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; text-decoration: none; }
+    .ft-brand img { width: 38px; height: 38px; background: var(--ice); border-radius: 9px; padding: 5px; }
+    .ft-brand .name { font-family: var(--serif); font-weight: 700; font-size: 1.35rem; color: var(--ice); }
+    .ft-top .blurb { max-width: 40ch; color: var(--text); }
+    .ft-links .c-title { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--steel); margin-bottom: 18px; }
+    .ft-links a {
+      display: flex; align-items: center; gap: 12px; width: fit-content; min-width: 0; overflow-wrap: anywhere;
+      color: var(--text); text-decoration: none; font-size: 0.98rem; margin-bottom: 13px;
+      transition: color 0.2s var(--ease), transform 0.2s var(--ease);
+    }
+    .ft-links a:hover { color: var(--ice); transform: translateX(4px); }
+    .ft-links a svg { width: 18px; height: 18px; color: var(--blue-soft); flex: none; }
+    .ft-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 26px; }
+    .ft-bottom .copyright, .ft-bottom .pill { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.1em; color: var(--steel); }
+    .ft-bottom .pill span { color: var(--blue-soft); }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 600px) {
+      .wrap { padding-left: 20px; padding-right: 20px; }
+      .nav-inner { padding: 12px 20px; }
+      .brand .name { font-size: 1.2rem; }
+      .hero-content { padding: 0 20px; }
+      .showcase-hero { min-height: 86vh; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { width: 100%; }
+    }
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .fade, .reveal { opacity: 1 !important; transform: none !important; }
+      .hero-bg-video { display: none; }
+      .scroll-cue { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">
+        <img src="brand_assets/logo.png" alt="Leonistic logo" />
+        <span class="name">Leonistic</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="showcase.html" class="active">Showcase</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#contact" class="cta">Get in touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Video hero -->
+  <header class="showcase-hero">
+    <video class="hero-bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
+      <source src="convertedvid.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="eyebrow fade d1"><span class="dot"></span><span class="kicker">Leonistic · Showcase</span></p>
+      <h1 class="fade d2">Where clarity <em>meets craft.</em></h1>
+      <p class="lead fade d3">Building software, analyzing data, and explaining technology — one clear solution at a time. Here's what that looks like in motion.</p>
+      <div class="hero-actions fade d4">
+        <a href="#watch" class="btn btn-primary">
+          Watch the showreel
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="index.html" class="btn btn-ghost">Back to home</a>
+      </div>
+    </div>
+    <div class="scroll-cue" aria-hidden="true">Scroll<span></span></div>
+  </header>
+
+  <main>
+
+    <!-- Features -->
+    <section class="section" id="features">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="kicker">What you're seeing</span>
+          <h2>Clarity, end to end</h2>
+          <p>Every project runs through the same three disciplines — built, measured, and explained until it's genuinely clear.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature reveal">
+            <div class="f-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <h3>Software that ships</h3>
+            <p>Practical, maintainable code built to solve real problems — not to impress a demo.</p>
+          </div>
+          <div class="feature reveal">
+            <div class="f-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3>Data that speaks</h3>
+            <p>Analysis that turns raw numbers into decisions you can actually act on.</p>
+          </div>
+          <div class="feature reveal">
+            <div class="f-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h3>Ideas made clear</h3>
+            <p>Technical content that makes complex technology approachable for anyone.</p>
+          </div>
+          <div class="feature reveal">
+            <div class="f-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </div>
+            <h3>One clear thread</h3>
+            <p>From first commit to final explanation, it stays one cohesive story.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Showreel + callouts -->
+    <section class="section section-alt" id="watch">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="kicker">The showreel</span>
+          <h2>See the work in motion</h2>
+          <p>Press play, or jump straight to a moment using the highlights on the right.</p>
+        </div>
+        <div class="showreel-grid">
+          <div class="player reveal">
+            <!-- The watchable cut (with sound + controls). Same asset as the ambient hero. -->
+            <video id="reel" controls playsinline preload="metadata">
+              <source src="convertedvid.mp4" type="video/mp4" />
+              Your browser doesn't support embedded video.
+            </video>
+          </div>
+          <div class="callouts reveal">
+            <p class="c-title">Moments worth watching</p>
+            <!-- Clip is 8s — timestamps map to its three beats. Adjust data-time (seconds) if the cut changes. -->
+            <button class="callout" data-time="0">
+              <span class="time">0:00</span>
+              <span class="c-body"><h4>Build</h4><p>Software taking shape from the first frame.</p></span>
+            </button>
+            <button class="callout" data-time="3">
+              <span class="time">0:03</span>
+              <span class="c-body"><h4>Analyze</h4><p>The data resolves into a decision worth making.</p></span>
+            </button>
+            <button class="callout" data-time="6">
+              <span class="time">0:06</span>
+              <span class="c-body"><h4>Explain</h4><p>It lands as something anyone can follow.</p></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta-section">
+      <div class="wrap">
+        <div class="inner reveal">
+          <h2>Have something that needs <em>clarity?</em></h2>
+          <p>Whether you're shipping a product, making sense of your numbers, or explaining a hard idea — let's build one clear solution.</p>
+          <a href="index.html#contact" class="btn btn-primary">
+            Get in touch
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="wrap">
+      <div class="ft-top">
+        <div>
+          <a class="ft-brand" href="index.html">
+            <img src="brand_assets/logo.png" alt="Leonistic logo" />
+            <span class="name">Leonistic</span>
+          </a>
+          <p class="blurb">Building software, analyzing data, and explaining technology — one clear solution at a time.</p>
+        </div>
+        <div class="ft-links">
+          <p class="c-title">Connect</p>
+          <a href="index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a>
+          <a href="mailto:professional.leonicholas@gmail.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+            professional.leonicholas@gmail.com
+          </a>
+          <a href="https://github.com/codingtrin" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/leo-nicholas-zotomayor-559158218/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-1 1.83-2.05 3.76-2.05 4.02 0 4.76 2.65 4.76 6.1V21H19v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85V21H9z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+      <div class="ft-bottom">
+        <span class="copyright">© 2026 Leonistic</span>
+        <span class="pill">BUILD <span>·</span> ANALYZE <span>·</span> EXPLAIN</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll-reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.14 });
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = (i % 4) * 0.07 + 's';
+      io.observe(el);
+    });
+
+    // Video callouts — click to seek the showreel and play
+    const reel = document.getElementById('reel');
+    document.querySelectorAll('.callout').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (!reel) return;
+        const t = parseFloat(btn.getAttribute('data-time')) || 0;
+        reel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const seek = () => { try { reel.currentTime = t; } catch (e) {} reel.play().catch(() => {}); };
+        if (reel.readyState >= 1) seek();
+        else reel.addEventListener('loadedmetadata', seek, { once: true });
+      });
+    });
+  </script>
+
+</body>
+</html>
