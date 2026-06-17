@@ -109,6 +109,7 @@
       background: radial-gradient(circle, rgba(59,130,246,0.28), transparent 62%);
       pointer-events: none;
     }
+    .hero-rays { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
     .hero .wrap { position: relative; z-index: 2; }
 
     .hero-grid {
@@ -156,10 +157,39 @@
       transition: transform 0.25s var(--ease), background 0.25s var(--ease), box-shadow 0.25s var(--ease);
       border: 1px solid transparent;
     }
-    .btn-primary { background: var(--blue); color: #fff; box-shadow: 0 10px 30px -10px rgba(59,130,246,0.7); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 38px -12px rgba(59,130,246,0.85); }
-    .btn-ghost { color: var(--ice); border-color: rgba(255,255,255,0.22); }
-    .btn-ghost:hover { border-color: var(--ice); transform: translateY(-2px); }
+    /* Liquid-glass CTAs — frosted translucency recreated in pure CSS */
+    .btn-primary, .btn-ghost {
+      position: relative; isolation: isolate;
+      color: var(--ice);
+      border: 1px solid rgba(255,255,255,0.2);
+      -webkit-backdrop-filter: blur(9px) saturate(155%);
+      backdrop-filter: blur(9px) saturate(155%);
+      transition: transform 0.25s var(--ease), filter 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    }
+    /* glassy top sheen */
+    .btn-primary::before, .btn-ghost::before {
+      content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+      background: linear-gradient(160deg, rgba(255,255,255,0.3), rgba(255,255,255,0) 46%);
+      pointer-events: none;
+    }
+    .btn-primary {
+      background: linear-gradient(160deg, rgba(59,130,246,0.62), rgba(59,130,246,0.32));
+      box-shadow:
+        inset 1px 1px 1px -0.5px rgba(255,255,255,0.55),
+        inset -1px -1px 1px -0.5px rgba(255,255,255,0.3),
+        inset 0 0 10px 3px rgba(255,255,255,0.08),
+        0 10px 30px -10px rgba(59,130,246,0.6);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,0.08);
+      box-shadow:
+        inset 1px 1px 1px -0.5px rgba(255,255,255,0.5),
+        inset -1px -1px 1px -0.5px rgba(255,255,255,0.25),
+        inset 0 0 8px 2px rgba(255,255,255,0.05),
+        0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+    .btn-primary:hover, .btn-ghost:hover { transform: translateY(-2px); filter: brightness(1.12); }
+    .btn-primary:active, .btn-ghost:active { transform: translateY(0) scale(0.98); filter: brightness(0.95); }
     .btn svg { width: 17px; height: 17px; }
 
     /* hero chart card */
@@ -172,7 +202,7 @@
       box-shadow: 0 30px 60px -30px rgba(0,0,0,0.6);
     }
     .chart-card .cc-head {
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex; justify-content: flex-end; align-items: center;
       margin-bottom: 18px;
     }
     .chart-card .cc-head span:first-child {
@@ -182,11 +212,8 @@
     .chart-card .cc-dots { display: flex; gap: 6px; }
     .chart-card .cc-dots i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.18); }
     .chart-card svg { width: 100%; height: 150px; display: block; }
-    .spark { fill: none; stroke: var(--blue); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
-      stroke-dasharray: 600; stroke-dashoffset: 600; animation: draw 2.2s var(--ease) 0.6s forwards; }
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-    .bar { fill: rgba(147,184,251,0.35); transform-origin: bottom; transform: scaleY(0); animation: grow 0.7s var(--ease) forwards; }
-    @keyframes grow { to { transform: scaleY(1); } }
+    .spark { fill: none; stroke: var(--blue); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .bar { fill: rgba(147,184,251,0.35); }
     .chart-stats { display: flex; gap: 26px; margin-top: 18px; }
     .chart-stats div .n { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: #fff; }
     .chart-stats div .l { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.12em; color: var(--steel); text-transform: uppercase; }
@@ -313,6 +340,7 @@
 
   <!-- Hero -->
   <header class="hero" id="top">
+    <canvas class="hero-rays" aria-hidden="true"></canvas>
     <div class="wrap">
       <div class="hero-grid">
         <div class="hero-copy">
@@ -334,7 +362,6 @@
         <!-- chart card -->
         <div class="chart-card reveal d4" aria-hidden="true">
           <div class="cc-head">
-            <span>signal / noise</span>
             <div class="cc-dots"><i></i><i></i><i></i></div>
           </div>
           <svg viewBox="0 0 320 150" preserveAspectRatio="none">
@@ -457,6 +484,142 @@
       el.style.transitionDelay = (i % 3) * 0.08 + 's';
       io.observe(el);
     });
+
+    /* Interactive ray burst — strands radiate from a glowing base and part around the cursor */
+    (function () {
+      const canvas = document.querySelector('.hero-rays');
+      const hero = document.getElementById('top');
+      if (!canvas || !hero) return;
+      const ctx = canvas.getContext('2d');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const COUNT = 150;
+      const RADIUS = 150;   // cursor influence
+      const FORCE = 26;     // push strength
+      const K = 0.06;       // spring stiffness
+      const DAMP = 0.86;    // velocity damping
+
+      let W, H, dpr, origin, rays = [];
+      const rand = (a, b) => a + Math.random() * (b - a);
+
+      function build() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = hero.clientWidth; H = hero.clientHeight;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        origin = { x: W / 2, y: H + 24 };          // glowing base just below the fold
+        const spread = Math.PI * 0.9;               // fan width
+        const start = -Math.PI / 2 - spread / 2;    // centered, pointing up
+        rays = [];
+        for (let i = 0; i < COUNT; i++) {
+          const t = i / (COUNT - 1);
+          const angle = start + spread * t + rand(-0.012, 0.012);
+          const center = 1 - Math.abs(t - 0.5) * 2; // tallest in the middle
+          const len = H * 0.5 * (0.42 + 0.58 * center) * rand(0.82, 1.16);
+          const bx = origin.x + Math.cos(angle) * len;
+          const by = origin.y + Math.sin(angle) * len;
+          rays.push({ bx, by, x: bx, y: by, vx: 0, vy: 0, w: rand(0.6, 1.7), a: rand(0.18, 0.5) });
+        }
+      }
+
+      const mouse = { x: -9999, y: -9999, on: false };
+      function move(e) {
+        const r = canvas.getBoundingClientRect();
+        const p = e.touches ? e.touches[0] : e;
+        mouse.x = p.clientX - r.left; mouse.y = p.clientY - r.top; mouse.on = true;
+      }
+      function off() { mouse.on = false; mouse.x = mouse.y = -9999; }
+      hero.addEventListener('mousemove', move);
+      hero.addEventListener('mouseleave', off);
+      hero.addEventListener('touchmove', move, { passive: true });
+      hero.addEventListener('touchend', off);
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        // bright core glow rising from the base
+        const rg = ctx.createRadialGradient(origin.x, origin.y, 0, origin.x, origin.y, H * 0.55);
+        rg.addColorStop(0, 'rgba(130,174,255,0.22)');
+        rg.addColorStop(1, 'rgba(130,174,255,0)');
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = rg;
+        ctx.fillRect(0, 0, W, H);
+
+        for (const ry of rays) {
+          if (!reduce) {
+            ry.vx += (ry.bx - ry.x) * K;
+            ry.vy += (ry.by - ry.y) * K;
+            if (mouse.on) {
+              const dx = ry.x - mouse.x, dy = ry.y - mouse.y;
+              const d2 = dx * dx + dy * dy;
+              if (d2 < RADIUS * RADIUS) {
+                const d = Math.sqrt(d2) || 1;
+                const f = (1 - d / RADIUS) * FORCE;
+                ry.vx += (dx / d) * f; ry.vy += (dy / d) * f;
+              }
+            }
+            ry.vx *= DAMP; ry.vy *= DAMP;
+            ry.x += ry.vx; ry.y += ry.vy;
+          }
+          const g = ctx.createLinearGradient(origin.x, origin.y, ry.x, ry.y);
+          g.addColorStop(0, 'rgba(214,228,255,' + ry.a + ')');     // ice-white base
+          g.addColorStop(0.55, 'rgba(59,130,246,' + ry.a * 0.6 + ')'); // electric blue
+          g.addColorStop(1, 'rgba(59,130,246,0)');                  // fade at the tip
+          ctx.strokeStyle = g; ctx.lineWidth = ry.w;
+          ctx.beginPath();
+          ctx.moveTo(origin.x, origin.y);
+          ctx.lineTo(ry.x, ry.y);
+          ctx.stroke();
+        }
+        ctx.globalCompositeOperation = 'source-over';
+        if (!reduce) requestAnimationFrame(draw);
+      }
+
+      build();
+      window.addEventListener('resize', build);
+      window.addEventListener('load', build);
+      draw();
+    })();
+
+    /* Animated hero chart — bars breathe up and down, line rides the tops */
+    (function () {
+      const card = document.querySelector('.chart-card');
+      if (!card) return;
+      const svg = card.querySelector('svg');
+      const bars = Array.from(svg.querySelectorAll('.bar'));
+      const spark = svg.querySelector('.spark');
+      if (!bars.length) return;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const BASE = 150; // baseline (viewBox bottom)
+
+      const cfg = bars.map((b, i) => {
+        const x = parseFloat(b.getAttribute('x'));
+        const w = parseFloat(b.getAttribute('width'));
+        return {
+          el: b, cx: x + w / 2,
+          mid: 72 + Math.random() * 6,        // resting height
+          amp: 24 + Math.random() * 14,       // sway amplitude
+          phase: i * 0.7,                     // staggered so it ripples
+          speed: 0.55 + Math.random() * 0.3,  // gentle, varied pace
+        };
+      });
+
+      function render(t) {
+        let pts = '';
+        for (const c of cfg) {
+          const h = Math.max(12, c.mid + Math.sin(t * c.speed + c.phase) * c.amp);
+          const y = BASE - h;
+          c.el.setAttribute('y', y.toFixed(1));
+          c.el.setAttribute('height', h.toFixed(1));
+          pts += c.cx.toFixed(1) + ',' + (y - 6).toFixed(1) + ' ';
+        }
+        if (spark) spark.setAttribute('points', pts.trim());
+      }
+
+      if (reduce) { render(0); return; }
+      function loop(ms) { render(ms / 1000); requestAnimationFrame(loop); }
+      requestAnimationFrame(loop);
+    })();
   </script>
 
 </body>
