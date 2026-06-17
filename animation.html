@@ -37,8 +37,10 @@
     .brand .name { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--ice); }
     .nav-links { display: flex; gap: 26px; align-items: center; }
     .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--text); text-decoration: none; transition: color 0.2s var(--ease); }
-    .nav-links a:hover { color: var(--ice); }
-    @media (max-width: 640px) { .nav-links a:not(.home) { display: none; } }
+    .nav-links a:hover, .nav-links a.active { color: var(--ice); }
+    .nav-links .cta { display: inline-flex; align-items: center; min-height: 44px; color: var(--ice); border: 1px solid rgba(255,255,255,0.25); padding: 9px 18px; border-radius: 999px; transition: all 0.25s var(--ease); }
+    .nav-links .cta:hover { background: var(--ice); color: var(--navy); border-color: var(--ice); }
+    @media (max-width: 640px) { .nav-links a:not(.cta) { display: none; } }
 
     /* Loader */
     .loader { position: fixed; inset: 0; z-index: 90; background: var(--navy);
@@ -140,14 +142,15 @@
   <!-- Nav -->
   <nav class="nav">
     <div class="nav-inner">
-      <a class="brand home" href="index.html">
+      <a class="brand" href="index.html">
         <img src="brand_assets/logo.png" alt="Leonistic logo" />
         <span class="name">Leonistic</span>
       </a>
       <div class="nav-links">
-        <a href="index.html" class="home">Home</a>
+        <a href="about.html">About</a>
+        <a href="services.html">What We Do</a>
         <a href="showcase.html">Showcase</a>
-        <a href="index.html#contact">Get in touch</a>
+        <a href="index.html#contact" class="cta">Get in touch</a>
       </div>
     </div>
   </nav>
