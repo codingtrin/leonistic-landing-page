@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>In Motion — Leonistic</title>
+  <meta name="description" content="From raw information to clear, working systems — a scroll-driven look at the power of data and software." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --navy: #0B1F3A; --navy-3: #081628;
+      --blue: #3B82F6; --blue-soft: #93b8fb;
+      --ice: #F8FAFC; --steel: #64748B; --text: #c6d4e8;
+      --line: rgba(147,184,251,0.14);
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "Inter", system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --maxw: 1140px; --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--navy); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { color: inherit; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
+    .kicker { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--blue-soft); }
+
+    /* Nav */
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+      background: linear-gradient(rgba(8,22,40,0.7), rgba(8,22,40,0)); }
+    .nav-inner { max-width: var(--maxw); margin: 0 auto; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand img { width: 34px; height: 34px; object-fit: contain; background: var(--ice); border-radius: 8px; padding: 5px; }
+    .brand .name { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--ice); }
+    .nav-links { display: flex; gap: 26px; align-items: center; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--text); text-decoration: none; transition: color 0.2s var(--ease); }
+    .nav-links a:hover { color: var(--ice); }
+    @media (max-width: 640px) { .nav-links a:not(.home) { display: none; } }
+
+    /* Loader */
+    .loader { position: fixed; inset: 0; z-index: 90; background: var(--navy);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+      transition: opacity 0.6s var(--ease), visibility 0.6s var(--ease); }
+    .loader.hide { opacity: 0; visibility: hidden; }
+    .loader .lbar { width: 200px; max-width: 60vw; height: 2px; background: rgba(147,184,251,0.2); border-radius: 2px; overflow: hidden; }
+    .loader .lbar i { display: block; height: 100%; width: 0%; background: var(--blue); transition: width 0.2s linear; }
+    .loader span { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--steel); }
+
+    /* Scroll-driven sequence */
+    .scrolly { position: relative; height: 460vh; }
+    .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--navy); }
+    @supports (height: 100svh) { .stage { height: 100svh; } }
+    #seq { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    /* vignette + bottom scrim for text legibility */
+    .stage::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+      background:
+        radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgba(8,22,40,0.65) 100%),
+        linear-gradient(180deg, rgba(8,22,40,0.55) 0%, transparent 22%, transparent 62%, rgba(8,22,40,0.82) 100%);
+    }
+
+    /* Caption overlays */
+    .caps { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+    .cap { position: absolute; left: 0; right: 0; bottom: 13%; text-align: center; padding: 0 24px;
+      opacity: 0; transform: translateY(20px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+    .cap.show { opacity: 1; transform: none; }
+    .cap .kicker { display: block; margin-bottom: 14px; }
+    .cap h2 { font-family: var(--serif); font-weight: 700; color: var(--ice);
+      font-size: clamp(1.7rem, 4.6vw, 3.4rem); line-height: 1.12; letter-spacing: -0.015em;
+      max-width: 20ch; margin: 0 auto; text-shadow: 0 2px 30px rgba(0,0,0,0.6); }
+    .cap h2 em { font-style: italic; color: var(--blue-soft); font-weight: 500; }
+
+    /* progress + hint */
+    .progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 0%; z-index: 4;
+      background: linear-gradient(90deg, var(--blue-soft), var(--blue)); box-shadow: 0 0 12px rgba(59,130,246,0.7); }
+    .hint { position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%); z-index: 4;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--blue-soft);
+      transition: opacity 0.5s var(--ease); }
+    .hint i { width: 1px; height: 30px; background: linear-gradient(var(--blue-soft), transparent); animation: cue 1.8s var(--ease) infinite; }
+    @keyframes cue { 0%,100% { opacity: 0.3; transform: scaleY(0.7); } 50% { opacity: 1; transform: scaleY(1); } }
+
+    /* Closing */
+    .closing { position: relative; text-align: center; padding: clamp(80px, 14vh, 150px) 0; border-top: 1px solid var(--line);
+      background: radial-gradient(ellipse 70% 100% at 50% 0%, rgba(59,130,246,0.10), transparent 70%), var(--navy-3); }
+    .closing .kicker { display: inline-block; margin-bottom: 18px; }
+    .closing h2 { font-family: var(--serif); font-weight: 700; color: var(--ice); font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.08; letter-spacing: -0.015em; margin-bottom: 16px; }
+    .closing h2 em { font-style: italic; color: var(--blue-soft); font-weight: 500; }
+    .closing p { max-width: 46ch; margin: 0 auto 34px; font-size: 1.1rem; color: var(--text); }
+    .actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px;
+      padding: 14px 28px; border-radius: 999px; font-weight: 600; font-size: 0.95rem; text-decoration: none;
+      border: 1px solid transparent; cursor: pointer; transition: transform 0.25s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease), box-shadow 0.25s var(--ease); }
+    .btn svg { width: 18px; height: 18px; }
+    .btn-primary { background: var(--blue); color: #fff; box-shadow: 0 12px 32px -12px rgba(59,130,246,0.8); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -14px rgba(59,130,246,0.9); }
+    .btn-ghost { color: var(--ice); border-color: rgba(255,255,255,0.26); background: rgba(255,255,255,0.05); }
+    .btn-ghost:hover { transform: translateY(-2px); border-color: var(--ice); }
+
+    footer { background: var(--navy-3); border-top: 1px solid var(--line); padding: 30px 0;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    footer .wrap { display: flex; align-items: center; justify-content: space-between; width: 100%; flex-wrap: wrap; gap: 10px; }
+    footer span { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--steel); }
+    footer span em { font-style: normal; color: var(--blue-soft); }
+
+    /* Mobile fallback — simple video play instead of scroll-tracking */
+    .mobile-anim { display: none; padding: 110px 0 80px; text-align: center; }
+    .mobile-anim .kicker { display: inline-block; margin-bottom: 16px; }
+    .mobile-anim h2 { font-family: var(--serif); font-weight: 700; color: var(--ice);
+      font-size: clamp(1.8rem, 7vw, 2.6rem); line-height: 1.1; letter-spacing: -0.015em; margin: 0 auto 28px; max-width: 16ch; }
+    .mobile-anim h2 em { font-style: italic; color: var(--blue-soft); font-weight: 500; }
+    .mobile-anim .ma-video { border-radius: 16px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0,0,0,0.8); }
+    .mobile-anim .ma-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: var(--navy); }
+
+    @media (max-width: 600px) {
+      .wrap { padding-left: 20px; padding-right: 20px; }
+      .nav-inner { padding: 14px 20px; }
+      .cap { bottom: 11%; }
+      .actions .btn { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="lbar"><i id="lbarFill"></i></div>
+    <span id="lbarText">Loading frames…</span>
+  </div>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand home" href="index.html">
+        <img src="brand_assets/logo.png" alt="Leonistic logo" />
+        <span class="name">Leonistic</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="home">Home</a>
+        <a href="showcase.html">Showcase</a>
+        <a href="index.html#contact">Get in touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Scroll-driven frame sequence -->
+  <section class="scrolly" id="story">
+    <div class="stage">
+      <canvas id="seq" aria-label="Animation: raw information transforming into a clear data dashboard"></canvas>
+
+      <div class="caps">
+        <div class="cap" data-start="0.04" data-end="0.30">
+          <span class="kicker">/ Raw</span>
+          <h2>It starts as raw <em>information.</em></h2>
+        </div>
+        <div class="cap" data-start="0.38" data-end="0.64">
+          <span class="kicker">/ Build · Analyze</span>
+          <h2>Software gives it structure. Analysis gives it <em>meaning.</em></h2>
+        </div>
+        <div class="cap" data-start="0.72" data-end="1.01">
+          <span class="kicker">/ Explain</span>
+          <h2>Until it becomes something <em>clear.</em></h2>
+        </div>
+      </div>
+
+      <div class="hint" id="hint">Scroll<i></i></div>
+      <div class="progress" id="progress"></div>
+    </div>
+  </section>
+
+  <!-- Mobile fallback: plain looping video (no scroll-jacking) -->
+  <section class="mobile-anim" id="mobileAnim">
+    <div class="wrap">
+      <span class="kicker">/ In Motion</span>
+      <h2>From raw information to <em>clarity.</em></h2>
+      <div class="ma-video">
+        <video id="maVideo" muted loop playsinline preload="none" poster="images/anim-start-wide.png"
+               aria-label="Animation: raw information transforming into a clear data dashboard"></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- Closing -->
+  <section class="closing">
+    <div class="wrap">
+      <span class="kicker">/ In Motion</span>
+      <h2>From noise to <em>clarity.</em></h2>
+      <p>That's the whole job — turning raw information into clear, working systems, one solution at a time.</p>
+      <div class="actions">
+        <a href="showcase.html" class="btn btn-ghost">Back to the showcase</a>
+        <a href="index.html#contact" class="btn btn-primary">
+          Get in touch
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Leonistic</span>
+      <span>BUILD <em>·</em> ANALYZE <em>·</em> EXPLAIN</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var TOTAL = 61;
+      var frame = function (i) { return 'frames/frame_' + String(i + 1).padStart(3, '0') + '.jpg'; };
+
+      var canvas = document.getElementById('seq');
+      var ctx = canvas.getContext('2d');
+      var scrolly = document.getElementById('story');
+      var progressBar = document.getElementById('progress');
+      var hint = document.getElementById('hint');
+      var caps = Array.prototype.slice.call(document.querySelectorAll('.cap'));
+      var loaderEl = document.getElementById('loader');
+      var lbarFill = document.getElementById('lbarFill');
+      var lbarText = document.getElementById('lbarText');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // --- Mobile / touch fallback: play the video instead of scroll-tracking frames ---
+      var isMobile = window.matchMedia('(max-width: 760px)').matches || window.matchMedia('(pointer: coarse)').matches;
+      if (isMobile) {
+        scrolly.style.display = 'none';
+        var ma = document.getElementById('mobileAnim');
+        ma.style.display = 'block';
+        var v = document.getElementById('maVideo');
+        v.src = 'images/anim-transition.mp4';   // only fetched on mobile, never on desktop
+        v.load();
+        v.play().catch(function () {});          // muted + playsinline allows autoplay
+        loaderEl.classList.add('hide');
+        return;                                  // skip the desktop frame engine entirely
+      }
+
+      var images = new Array(TOTAL);
+      var loadedFlags = new Array(TOTAL).fill(false);
+      var loadedCount = 0;
+      var current = -1;
+
+      // --- canvas sizing (cover, DPR-aware) ---
+      function size() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(canvas.clientWidth * dpr);
+        canvas.height = Math.round(canvas.clientHeight * dpr);
+        draw(current < 0 ? 0 : current, true);
+      }
+      function nearestLoaded(i) {
+        if (loadedFlags[i]) return i;
+        for (var d = 1; d < TOTAL; d++) {
+          if (i - d >= 0 && loadedFlags[i - d]) return i - d;
+          if (i + d < TOTAL && loadedFlags[i + d]) return i + d;
+        }
+        return -1;
+      }
+      function draw(i, force) {
+        if (i === current && !force) return;
+        var use = nearestLoaded(i);
+        if (use < 0) return;
+        var img = images[use];
+        var cw = canvas.width, ch = canvas.height;
+        var ir = img.width / img.height, cr = cw / ch, dw, dh, dx, dy;
+        if (cr > ir) { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }
+        else { dh = ch; dw = ch * ir; dy = 0; dx = (cw - dw) / 2; }
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.drawImage(img, dx, dy, dw, dh);
+        current = i;
+      }
+
+      // --- scroll -> frame index ---
+      function progress() {
+        var r = scrolly.getBoundingClientRect();
+        var span = r.height - window.innerHeight;
+        if (span <= 0) return 0;
+        var p = -r.top / span;
+        return p < 0 ? 0 : (p > 1 ? 1 : p);
+      }
+      function update() {
+        var p = reduce ? 1 : progress();
+        var idx = Math.round(p * (TOTAL - 1));
+        draw(idx);
+        progressBar.style.width = (p * 100).toFixed(2) + '%';
+        if (hint) hint.style.opacity = p > 0.03 ? '0' : '0.85';
+        for (var k = 0; k < caps.length; k++) {
+          var s = parseFloat(caps[k].dataset.start), e = parseFloat(caps[k].dataset.end);
+          caps[k].classList.toggle('show', p >= s && p < e);
+        }
+      }
+      var ticking = false;
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () { update(); ticking = false; });
+      }
+
+      // --- preload ---
+      function onOne() {
+        loadedCount++;
+        var pct = Math.round(loadedCount / TOTAL * 100);
+        lbarFill.style.width = pct + '%';
+        lbarText.textContent = 'Loading frames… ' + pct + '%';
+        if (current < 0) { size(); update(); }      // draw as soon as something is ready
+        if (loadedCount >= TOTAL) {
+          loaderEl.classList.add('hide');
+          update();
+        }
+      }
+      for (var i = 0; i < TOTAL; i++) {
+        (function (i) {
+          var im = new Image();
+          im.onload = function () { loadedFlags[i] = true; onOne(); };
+          im.onerror = function () { onOne(); };          // don't stall on a missing frame
+          im.src = frame(i);
+          images[i] = im;
+        })(i);
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', size);
+      // safety: if some frames are slow/cached oddly, reveal after a max wait
+      setTimeout(function () { loaderEl.classList.add('hide'); }, 9000);
+    })();
+  </script>
+
+</body>
+</html>

@@ -269,6 +269,40 @@
     .pillar-card h3 { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
     .pillar-card p { color: var(--steel); font-size: 1rem; }
 
+    /* ---------- In motion (animation teaser) ---------- */
+    .motion {
+      position: relative; overflow: hidden; text-align: center;
+      background: var(--navy); color: var(--ice);
+      padding: 104px 0;
+    }
+    .motion::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(147,184,251,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(147,184,251,0.07) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse 70% 80% at 50% 35%, #000 35%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 80% at 50% 35%, #000 35%, transparent 100%);
+    }
+    .motion .wrap { position: relative; z-index: 2; }
+    .motion .mono-label { display: inline-block; margin-bottom: 26px; }
+    .motion h2 {
+      font-family: var(--serif); font-weight: 700;
+      font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.08; letter-spacing: -0.015em;
+      max-width: 18ch; margin: 0 auto 18px;
+    }
+    .motion h2 em { font-style: italic; color: var(--blue-soft); font-weight: 500; }
+    .motion p { color: #c3d2e8; font-size: 1.12rem; max-width: 52ch; margin: 0 auto 40px; }
+    /* animated data bars — a hint of the motion to come */
+    .motion-viz { display: flex; align-items: flex-end; justify-content: center; gap: 7px; height: 76px; margin: 0 auto 42px; }
+    .motion-viz i {
+      width: 9px; height: 38%; border-radius: 4px;
+      background: linear-gradient(var(--blue-soft), var(--blue));
+      animation: motionBar 1.9s var(--ease) infinite;
+    }
+    @keyframes motionBar { 0%, 100% { height: 16%; opacity: 0.65; } 50% { height: 100%; opacity: 1; } }
+    @media (max-width: 600px) { .motion { padding: 72px 0; } .motion-viz { height: 60px; } }
+
     /* ---------- Footer ---------- */
     footer {
       position: relative; background: var(--navy); color: var(--ice);
@@ -478,6 +512,36 @@
           <p>Technical content that makes complex technology clear and approachable.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- In motion (animation teaser) -->
+  <section class="motion" id="motion">
+    <div class="wrap">
+      <span class="mono-label">/ In Motion</span>
+      <div class="motion-viz" aria-hidden="true">
+        <i style="animation-delay:0s"></i>
+        <i style="animation-delay:.08s"></i>
+        <i style="animation-delay:.16s"></i>
+        <i style="animation-delay:.24s"></i>
+        <i style="animation-delay:.32s"></i>
+        <i style="animation-delay:.40s"></i>
+        <i style="animation-delay:.48s"></i>
+        <i style="animation-delay:.56s"></i>
+        <i style="animation-delay:.64s"></i>
+        <i style="animation-delay:.72s"></i>
+        <i style="animation-delay:.80s"></i>
+        <i style="animation-delay:.88s"></i>
+        <i style="animation-delay:.96s"></i>
+        <i style="animation-delay:1.04s"></i>
+        <i style="animation-delay:1.12s"></i>
+      </div>
+      <h2>See the power of data <em>in motion.</em></h2>
+      <p>Watch clean software and sharp analysis come together — a living view of how raw information turns into clear, working systems.</p>
+      <a href="animation.html" class="btn btn-primary">
+        Launch the animation
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
     </div>
   </section>
 

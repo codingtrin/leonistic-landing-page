@@ -230,6 +230,29 @@
     .cta-section p { position: relative; max-width: 48ch; margin: 0 auto 34px; font-size: 1.12rem; }
     .cta-section .btn { position: relative; }
 
+    /* ---------- In motion (animation teaser) ---------- */
+    .motion-inner {
+      position: relative; overflow: hidden; text-align: center;
+      background: linear-gradient(160deg, rgba(59,130,246,0.12), rgba(255,255,255,0.02));
+      border: 1px solid rgba(147,184,251,0.24); border-radius: 24px;
+      padding: clamp(48px, 7vw, 80px) 32px;
+    }
+    .motion-inner .kicker { display: inline-block; margin-bottom: 24px; }
+    .motion-inner h2 {
+      font-family: var(--serif); font-weight: 700; color: var(--ice);
+      font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.015em;
+      max-width: 18ch; margin: 0 auto 16px;
+    }
+    .motion-inner h2 em { font-style: italic; color: var(--blue-soft); font-weight: 500; }
+    .motion-inner p { color: var(--text); font-size: 1.12rem; max-width: 50ch; margin: 0 auto 38px; }
+    .motion-viz { display: flex; align-items: flex-end; justify-content: center; gap: 7px; height: 72px; margin: 0 auto 40px; }
+    .motion-viz i {
+      width: 9px; height: 38%; border-radius: 4px;
+      background: linear-gradient(var(--blue-soft), var(--blue));
+      animation: motionBar 1.9s var(--ease) infinite;
+    }
+    @keyframes motionBar { 0%, 100% { height: 16%; opacity: 0.65; } 50% { height: 100%; opacity: 1; } }
+
     /* ---------- Footer ---------- */
     footer { background: var(--navy-3); border-top: 1px solid var(--line); padding: 80px 0 40px; }
     .ft-top { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 48px; align-items: start; padding-bottom: 48px; border-bottom: 1px solid var(--line); }
@@ -276,21 +299,21 @@
   <!-- Nav -->
   <nav class="nav">
     <div class="nav-inner">
-      <a class="brand" href="index.html">
+      <a class="brand" href="#top">
         <img src="brand_assets/logo.png" alt="Leonistic logo" />
         <span class="name">Leonistic</span>
       </a>
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="showcase.html" class="active">Showcase</a>
-        <a href="index.html#about">About</a>
-        <a href="index.html#contact" class="cta">Get in touch</a>
+        <a href="#features">Features</a>
+        <a href="#watch">Showreel</a>
+        <a href="#contact" class="cta">Get in touch</a>
       </div>
     </div>
   </nav>
 
   <!-- Video hero -->
-  <header class="showcase-hero">
+  <header class="showcase-hero" id="top">
     <video class="hero-bg-video" autoplay muted loop playsinline preload="auto" poster="images/hero-bg.png" aria-hidden="true" tabindex="-1">
       <source src="convertedvid.mp4" type="video/mp4" />
     </video>
@@ -395,14 +418,32 @@
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="section cta-section">
+    <!-- In motion (animation teaser) -->
+    <section class="section" id="motion">
       <div class="wrap">
-        <div class="inner reveal">
-          <h2>Have something that needs <em>clarity?</em></h2>
-          <p>Whether you're shipping a product, making sense of your numbers, or explaining a hard idea — let's build one clear solution.</p>
-          <a href="index.html#contact" class="btn btn-primary">
-            Get in touch
+        <div class="motion-inner reveal">
+          <span class="kicker">/ In Motion</span>
+          <div class="motion-viz" aria-hidden="true">
+            <i style="animation-delay:0s"></i>
+            <i style="animation-delay:.08s"></i>
+            <i style="animation-delay:.16s"></i>
+            <i style="animation-delay:.24s"></i>
+            <i style="animation-delay:.32s"></i>
+            <i style="animation-delay:.40s"></i>
+            <i style="animation-delay:.48s"></i>
+            <i style="animation-delay:.56s"></i>
+            <i style="animation-delay:.64s"></i>
+            <i style="animation-delay:.72s"></i>
+            <i style="animation-delay:.80s"></i>
+            <i style="animation-delay:.88s"></i>
+            <i style="animation-delay:.96s"></i>
+            <i style="animation-delay:1.04s"></i>
+            <i style="animation-delay:1.12s"></i>
+          </div>
+          <h2>See the power of data <em>in motion.</em></h2>
+          <p>Watch clean software and sharp analysis come together — a living view of how raw information turns into clear, working systems.</p>
+          <a href="animation.html" class="btn btn-primary">
+            Launch the animation
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
         </div>
@@ -412,7 +453,7 @@
   </main>
 
   <!-- Footer -->
-  <footer>
+  <footer id="contact">
     <div class="wrap">
       <div class="ft-top">
         <div>
