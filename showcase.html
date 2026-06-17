@@ -201,6 +201,8 @@
       transition: transform 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease);
     }
     .callout:hover { transform: translateX(4px); border-color: rgba(147,184,251,0.34); background: rgba(255,255,255,0.06); }
+    .callout.active { border-color: var(--blue); background: rgba(59,130,246,0.12); }
+    .callout.active .time { background: var(--blue); color: #fff; }
     .callout .time {
       font-family: var(--mono); font-size: 0.82rem; color: var(--blue-soft);
       background: rgba(59,130,246,0.12); border-radius: 7px; padding: 4px 9px; flex: none; margin-top: 1px;
@@ -307,7 +309,7 @@
         <a href="about.html">About</a>
         <a href="services.html">What We Do</a>
         <a href="showcase.html" class="active">Showcase</a>
-        <a href="index.html#contact" class="cta">Get in touch</a>
+        <a href="#contact" class="cta">Get in touch</a>
       </div>
     </div>
   </nav>
@@ -512,6 +514,21 @@
         else reel.addEventListener('loadedmetadata', seek, { once: true });
       });
     });
+
+    // Bidirectional sync: highlight the callout matching current playback time
+    if (reel) {
+      const calloutEls = Array.prototype.slice.call(document.querySelectorAll('.callout'));
+      const times = calloutEls.map((b) => parseFloat(b.getAttribute('data-time')) || 0);
+      const syncActive = () => {
+        const t = reel.currentTime;
+        let idx = 0;
+        for (let i = 0; i < times.length; i++) { if (t >= times[i] - 0.05) idx = i; }
+        calloutEls.forEach((b, i) => b.classList.toggle('active', i === idx));
+      };
+      reel.addEventListener('timeupdate', syncActive);
+      reel.addEventListener('seeked', syncActive);
+      reel.addEventListener('play', syncActive);
+    }
   </script>
 
 </body>
