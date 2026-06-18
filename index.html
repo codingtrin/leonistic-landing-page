@@ -307,6 +307,53 @@
     @keyframes motionBar { 0%, 100% { height: 16%; opacity: 0.65; } 50% { height: 100%; opacity: 1; } }
     @media (max-width: 600px) { .motion { padding: 72px 0; } .motion-viz { height: 60px; } }
 
+    /* ---------- Contact ---------- */
+    .contact { padding: 110px 0; }
+    .contact-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 64px; align-items: start; }
+    @media (max-width: 880px) { .contact-grid { grid-template-columns: 1fr; gap: 36px; } }
+
+    .contact .kicker { display: block; margin-bottom: 20px; }
+    .contact h2 {
+      font-family: var(--serif); font-weight: 700;
+      font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1.1; letter-spacing: -0.015em;
+    }
+    .contact h2 .accent { color: var(--blue); font-style: italic; font-weight: 500; }
+    .contact .lead { font-size: 1.12rem; color: #33415a; margin-top: 18px; max-width: 34ch; }
+
+    .contact-form {
+      background: #fff; border: 1px solid var(--line); border-radius: 18px;
+      padding: 34px; box-shadow: 0 28px 56px -36px rgba(11,31,58,0.30);
+    }
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--steel); margin-bottom: 8px;
+    }
+    .field label .req { color: var(--blue); }
+    .field input, .field textarea {
+      width: 100%; font-family: var(--sans); font-size: 1rem; color: var(--ink);
+      background: var(--ice); border: 1px solid var(--line); border-radius: 10px;
+      padding: 13px 15px;
+      transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), background 0.2s var(--ease);
+    }
+    .field textarea { resize: vertical; min-height: 132px; line-height: 1.6; }
+    .field input::placeholder, .field textarea::placeholder { color: #9aa7bd; }
+    .field input:focus, .field textarea:focus {
+      outline: none; border-color: var(--blue); background: #fff;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.14);
+    }
+    .btn-submit {
+      width: 100%; margin-top: 6px;
+      font-family: var(--sans); font-weight: 600; font-size: 0.98rem;
+      min-height: 52px; border-radius: 999px; cursor: pointer;
+      border: 1px solid var(--ink); background: var(--ink); color: var(--ice);
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      transition: transform 0.25s var(--ease), background 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    }
+    .btn-submit:hover { transform: translateY(-2px); background: var(--navy-2); box-shadow: 0 14px 30px -14px rgba(11,31,58,0.5); }
+    .btn-submit:active { transform: translateY(0) scale(0.99); }
+    .btn-submit svg { width: 17px; height: 17px; }
+
     /* ---------- Footer ---------- */
     footer {
       position: relative; background: var(--navy); color: var(--ice);
@@ -364,6 +411,8 @@
       .pillars { padding-bottom: 72px; }
       .pillars-head { margin-bottom: 36px; }
       .pillar-card { padding: 28px 24px 26px; }
+      .contact { padding: 64px 0; }
+      .contact-form { padding: 26px; }
 
       footer { padding: 64px 0 32px; }
       footer .ft-top { padding-bottom: 40px; }
@@ -552,8 +601,39 @@
     </div>
   </section>
 
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="reveal">
+          <span class="mono-label kicker">/ Get in touch</span>
+          <h2>Let's turn your idea into <span class="accent">something clear.</span></h2>
+          <p class="lead">Tell me what you're building, measuring, or trying to understand—I'll reply with a clear next step.</p>
+        </div>
+        <form class="contact-form reveal" action="" method="post">
+          <div class="field">
+            <label for="cf-name">Name <span class="req">*</span></label>
+            <input id="cf-name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+          </div>
+          <div class="field">
+            <label for="cf-email">Email <span class="req">*</span></label>
+            <input id="cf-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+          </div>
+          <div class="field">
+            <label for="cf-message">Message</label>
+            <textarea id="cf-message" name="message" placeholder="What can I help you build, analyze, or explain?"></textarea>
+          </div>
+          <button type="submit" class="btn-submit">
+            Send message
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
-  <footer id="contact">
+  <footer>
     <div class="wrap">
       <div class="ft-top">
         <h2>Let's build something <em>clear.</em></h2>
@@ -586,7 +666,7 @@
         if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       });
     }, { threshold: 0.15 });
-    document.querySelectorAll('.about .reveal, .pillars .reveal').forEach((el, i) => {
+    document.querySelectorAll('.about .reveal, .pillars .reveal, .contact .reveal').forEach((el, i) => {
       el.style.transitionDelay = (i % 3) * 0.08 + 's';
       io.observe(el);
     });
