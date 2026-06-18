@@ -353,6 +353,16 @@
     .btn-submit:hover { transform: translateY(-2px); background: var(--navy-2); box-shadow: 0 14px 30px -14px rgba(11,31,58,0.5); }
     .btn-submit:active { transform: translateY(0) scale(0.99); }
     .btn-submit svg { width: 17px; height: 17px; }
+    .btn-submit[disabled] { opacity: 0.6; cursor: progress; transform: none; }
+
+    .form-status {
+      font-size: 0.92rem; line-height: 1.5; margin-top: 16px;
+      min-height: 1.2em; opacity: 0;
+      transition: opacity 0.25s var(--ease);
+    }
+    .form-status.show { opacity: 1; }
+    .form-status.ok { color: #15803d; }
+    .form-status.err { color: #b91c1c; }
 
     /* ---------- Footer ---------- */
     footer {
@@ -610,7 +620,7 @@
           <h2>Let's turn your idea into <span class="accent">something clear.</span></h2>
           <p class="lead">Tell me what you're building, measuring, or trying to understand—I'll reply with a clear next step.</p>
         </div>
-        <form class="contact-form reveal" action="" method="post">
+        <form class="contact-form reveal" id="contact-form" action="/api/contact" method="post">
           <div class="field">
             <label for="cf-name">Name <span class="req">*</span></label>
             <input id="cf-name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
@@ -627,6 +637,7 @@
             Send message
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>
       </div>
     </div>
@@ -805,6 +816,54 @@
       if (reduce) { render(0); return; }
       function loop(ms) { render(ms / 1000); requestAnimationFrame(loop); }
       requestAnimationFrame(loop);
+    })();
+
+    /* Contact form — submit to the serverless function without leaving the page */
+    (function () {
+      const form = document.getElementById('contact-form');
+      if (!form) return;
+      const status = document.getElementById('form-status');
+      const btn = form.querySelector('.btn-submit');
+
+      function setStatus(msg, kind) {
+        status.textContent = msg;
+        status.classList.toggle('ok', kind === 'ok');
+        status.classList.toggle('err', kind === 'err');
+        status.classList.toggle('show', !!msg);
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+
+        btn.disabled = true;
+        setStatus('Sending…', null);
+
+        const payload = {
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          message: form.message.value.trim(),
+        };
+
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.ok) {
+            form.reset();
+            setStatus("Thanks! Your message is on its way — I'll be in touch soon.", 'ok');
+          } else {
+            setStatus(data.error || 'Something went wrong. Please try again.', 'err');
+          }
+        } catch (err) {
+          setStatus('Network error — please check your connection and try again.', 'err');
+        } finally {
+          btn.disabled = false;
+        }
+      });
     })();
   </script>
 
