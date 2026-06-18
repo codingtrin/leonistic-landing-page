@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Submissions — Leonistic Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@0,600;0,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --navy:   #0B1F3A;
+      --navy-2: #0d2848;
+      --blue:   #3B82F6;
+      --blue-soft: #93b8fb;
+      --ice:    #F8FAFC;
+      --steel:  #64748B;
+      --line:   #e3e8f0;
+      --ink:    #0B1F3A;
+
+      --serif: "Playfair Display", Georgia, serif;
+      --sans:  "Inter", system-ui, sans-serif;
+      --mono:  "JetBrains Mono", ui-monospace, monospace;
+
+      --maxw: 1100px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--sans);
+      color: var(--ink);
+      background: var(--ice);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
+
+    .mono-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    /* ---------- Top bar ---------- */
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 14px; padding-bottom: 14px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand img { width: 34px; height: 34px; object-fit: contain; }
+    .brand .name {
+      font-family: var(--serif); font-weight: 700; font-size: 1.25rem;
+      color: var(--ink); letter-spacing: -0.01em;
+    }
+    .nav .badge {
+      color: var(--steel);
+      border: 1px solid var(--line);
+      padding: 6px 12px; border-radius: 999px;
+      font-size: 0.64rem;
+    }
+
+    /* ---------- Header ---------- */
+    .admin-head { margin-top: 44px; }
+    .admin-head .kicker { display: block; margin-bottom: 14px; }
+    .admin-head h1 {
+      font-family: var(--serif); font-weight: 700;
+      font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.1; letter-spacing: -0.015em;
+    }
+    .count { color: var(--steel); font-size: 1rem; margin-top: 10px; }
+    .count strong { color: var(--ink); font-weight: 600; }
+
+    /* ---------- Toolbar ---------- */
+    .toolbar {
+      display: flex; gap: 14px; align-items: center; justify-content: space-between;
+      margin: 28px 0 18px; flex-wrap: wrap;
+    }
+    .search { position: relative; flex: 1; min-width: 240px; max-width: 440px; }
+    .search svg {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      width: 17px; height: 17px; color: var(--steel); pointer-events: none;
+    }
+    .search input {
+      width: 100%; font-family: var(--sans); font-size: 0.95rem; color: var(--ink);
+      padding: 12px 14px 12px 40px;
+      border: 1px solid var(--line); border-radius: 10px; background: #fff;
+      transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    }
+    .search input::placeholder { color: #9aa7bd; }
+    .search input:focus {
+      outline: none; border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.14);
+    }
+    .btn-refresh {
+      font-family: var(--sans); font-weight: 600; font-size: 0.9rem;
+      padding: 11px 18px; border-radius: 999px; cursor: pointer;
+      border: 1px solid var(--line); background: #fff; color: var(--ink);
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+    }
+    .btn-refresh:hover { border-color: var(--ink); }
+    .btn-refresh svg { width: 15px; height: 15px; }
+
+    /* ---------- Table ---------- */
+    .card {
+      background: #fff; border: 1px solid var(--line); border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 18px 44px -32px rgba(11,31,58,0.28);
+      margin-bottom: 64px;
+    }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      text-align: left; font-family: var(--mono);
+      font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--steel); font-weight: 500;
+      padding: 15px 20px; border-bottom: 1px solid var(--line);
+      background: #fbfcfe; white-space: nowrap;
+    }
+    tbody td {
+      padding: 15px 20px; border-bottom: 1px solid var(--line);
+      font-size: 0.93rem; vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: #f6f9ff; }
+    .col-date { white-space: nowrap; color: var(--steel); font-variant-numeric: tabular-nums; }
+    .col-name { font-weight: 600; white-space: nowrap; }
+    .col-email a { color: var(--blue); text-decoration: none; }
+    .col-email a:hover { text-decoration: underline; }
+    .col-msg { color: #33415a; min-width: 240px; max-width: 460px; overflow-wrap: anywhere; }
+    .col-msg.empty { color: #aab4c5; }
+
+    .state { padding: 48px 20px; text-align: center; color: var(--steel); font-size: 0.95rem; }
+    .state.err { color: #b91c1c; }
+    .state.hidden { display: none; }
+
+    @media (max-width: 600px) {
+      .wrap { padding-left: 20px; padding-right: 20px; }
+      .admin-head { margin-top: 32px; }
+      .toolbar { gap: 10px; }
+      .search { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner wrap">
+      <a class="brand" href="index.html">
+        <img src="brand_assets/logo.png" alt="Leonistic logo" />
+        <span class="name">Leonistic</span>
+      </a>
+      <span class="mono-label badge">Admin · Internal</span>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <header class="admin-head">
+      <span class="mono-label kicker">/ Admin</span>
+      <h1>Submissions</h1>
+      <p class="count" id="count">Loading…</p>
+    </header>
+
+    <div class="toolbar">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search" type="search" placeholder="Filter by name or email…" autocomplete="off" aria-label="Filter submissions by name or email" />
+      </label>
+      <button id="refresh" class="btn-refresh" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Refresh
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="state" id="state">Loading submissions…</div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    /* Day 3: the anon (publishable) key is meant to be public and RLS is disabled
+       on the signups table, so reading from the browser is intentional here. */
+    const SUPABASE_URL = 'https://btxcafrbsupjhwzdgxqt.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_yZt9ABqFdzivyvQB7M4dCQ_fdWpU2QS';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const rowsEl = document.getElementById('rows');
+    const countEl = document.getElementById('count');
+    const stateEl = document.getElementById('state');
+    const searchEl = document.getElementById('search');
+    const refreshEl = document.getElementById('refresh');
+
+    const dateFmt = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric', month: 'short', day: 'numeric',
+      hour: 'numeric', minute: '2-digit',
+    });
+
+    let all = [];
+
+    function setState(msg, isError) {
+      if (!msg) { stateEl.classList.add('hidden'); return; }
+      stateEl.textContent = msg;
+      stateEl.classList.toggle('err', !!isError);
+      stateEl.classList.remove('hidden');
+    }
+
+    function updateCount(shown, total) {
+      if (total === 0) { countEl.textContent = 'No submissions yet'; return; }
+      if (shown === total) {
+        countEl.innerHTML = `<strong>${total}</strong> submission${total === 1 ? '' : 's'}`;
+      } else {
+        countEl.innerHTML = `Showing <strong>${shown}</strong> of ${total} submissions`;
+      }
+    }
+
+    function render(list) {
+      rowsEl.replaceChildren();
+      for (const row of list) {
+        const tr = document.createElement('tr');
+
+        const date = document.createElement('td');
+        date.className = 'col-date';
+        date.textContent = row.created_at ? dateFmt.format(new Date(row.created_at)) : '—';
+
+        const name = document.createElement('td');
+        name.className = 'col-name';
+        name.textContent = row.name || '—';
+
+        const email = document.createElement('td');
+        email.className = 'col-email';
+        if (row.email) {
+          const a = document.createElement('a');
+          a.href = 'mailto:' + row.email;
+          a.textContent = row.email;
+          email.appendChild(a);
+        } else {
+          email.textContent = '—';
+        }
+
+        const msg = document.createElement('td');
+        msg.className = 'col-msg';
+        if (row.message && row.message.trim()) {
+          msg.textContent = row.message;
+        } else {
+          msg.textContent = '—';
+          msg.classList.add('empty');
+        }
+
+        tr.append(date, name, email, msg);
+        rowsEl.appendChild(tr);
+      }
+    }
+
+    function applyFilter() {
+      const q = searchEl.value.trim().toLowerCase();
+      const filtered = q
+        ? all.filter((r) =>
+            (r.name || '').toLowerCase().includes(q) ||
+            (r.email || '').toLowerCase().includes(q))
+        : all;
+
+      render(filtered);
+      updateCount(filtered.length, all.length);
+
+      if (all.length === 0) setState('No submissions yet.');
+      else if (filtered.length === 0) setState('No matches for “' + searchEl.value.trim() + '”.');
+      else setState(null);
+    }
+
+    async function load() {
+      setState('Loading submissions…');
+      const { data, error } = await supabase
+        .from('signups')
+        .select('id, name, email, message, created_at')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error(error);
+        all = [];
+        render(all);
+        countEl.textContent = 'Could not load submissions';
+        setState('Error loading submissions: ' + error.message, true);
+        return;
+      }
+
+      all = data || [];
+      applyFilter();
+    }
+
+    searchEl.addEventListener('input', applyFilter);
+    refreshEl.addEventListener('click', load);
+    load();
+  </script>
+
+</body>
+</html>
