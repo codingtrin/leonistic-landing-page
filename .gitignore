@@ -9,3 +9,9 @@ Thumbs.db
 .env.local
 
 node_modules/
+
+# Playwright generated artifacts
+test-results/
+playwright-report/
+tests/screenshots/
+tests/qa-report.md
